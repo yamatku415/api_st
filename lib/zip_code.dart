@@ -16,10 +16,10 @@ class ZipCode {
       //apiから返ってくる値はjsonなのでそれを変換してあげるjsonDecode(result.body。result.bobyの中に住所などの値が入っている　チャプター9の4:00
       Map<String, String>? response = {};
       if (data['message'] != null) {
-        response['message'] = data['message'];
+        response['message'] = '郵便番号の桁数が不正です';
       } else {
         if (data['results'] == null) {
-          response['message'] = 'しっかりしろ';
+          response['message'] = '正しい郵便番号を入力してください';
         } else {
           response['address'] = data['results'][0]['address2'];
         }
