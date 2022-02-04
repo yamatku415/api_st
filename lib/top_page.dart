@@ -12,111 +12,13 @@ class TopPage extends StatefulWidget {
 }
 
 class _TopPageState extends State<TopPage> {
-  Weathaer currentWeather =
-      Weathaer(temp: 15, description: '晴れ', tempMax: 18, tempMin: 14);
+  Weathaer? currentWeather;
   String address = '-';
   String? errorMessage;
-  List<Weathaer> hourlyWeather = [
-    //List<Weathaer>とする事で、Weathaerクラスで定義した変数を使うことができる。
-    Weathaer(
-        temp: 20,
-        description: '晴れ',
-        time: DateTime(2021, 10, 1, 10),
-        rainyPercent: 0),
-    Weathaer(
-        temp: 18,
-        description: '雨',
-        time: DateTime(2021, 10, 1, 11),
-        rainyPercent: 0),
-    Weathaer(
-        temp: 17,
-        description: '曇り',
-        time: DateTime(2021, 10, 1, 12),
-        rainyPercent: 0),
-    Weathaer(
-        temp: 19,
-        description: '晴れ',
-        time: DateTime(2021, 10, 1, 13),
-        rainyPercent: 10),
-    Weathaer(
-        temp: 20,
-        description: '晴れ',
-        time: DateTime(2021, 10, 1, 10),
-        rainyPercent: 0),
-    Weathaer(
-        temp: 18,
-        description: '雨',
-        time: DateTime(2021, 10, 1, 11),
-        rainyPercent: 0),
-    Weathaer(
-        temp: 17,
-        description: '曇り',
-        time: DateTime(2021, 10, 1, 12),
-        rainyPercent: 0),
-    Weathaer(
-        temp: 19,
-        description: '晴れ',
-        time: DateTime(2021, 10, 1, 13),
-        rainyPercent: 10),
-    Weathaer(
-        temp: 20,
-        description: '晴れ',
-        time: DateTime(2021, 10, 1, 10),
-        rainyPercent: 0),
-    Weathaer(
-        temp: 18,
-        description: '雨',
-        time: DateTime(2021, 10, 1, 11),
-        rainyPercent: 0),
-    Weathaer(
-        temp: 17,
-        description: '曇り',
-        time: DateTime(2021, 10, 1, 12),
-        rainyPercent: 0),
-    Weathaer(
-        temp: 19,
-        description: '晴れ',
-        time: DateTime(2021, 10, 1, 13),
-        rainyPercent: 10),
-  ];
-  List<Weathaer> dailyWeather = [
-    Weathaer(
-        tempMax: 20, tempMin: 16, rainyPercent: 0, time: DateTime(2021, 10, 1)),
-    Weathaer(
-        tempMax: 18, tempMin: 15, rainyPercent: 0, time: DateTime(2021, 10, 2)),
-    Weathaer(
-        tempMax: 20, tempMin: 19, rainyPercent: 0, time: DateTime(2021, 10, 3)),
-    Weathaer(
-        tempMax: 20, tempMin: 16, rainyPercent: 0, time: DateTime(2021, 10, 1)),
-    Weathaer(
-        tempMax: 18, tempMin: 15, rainyPercent: 0, time: DateTime(2021, 10, 2)),
-    Weathaer(
-        tempMax: 20, tempMin: 19, rainyPercent: 0, time: DateTime(2021, 10, 3)),
-    Weathaer(
-        tempMax: 20, tempMin: 16, rainyPercent: 0, time: DateTime(2021, 10, 1)),
-    Weathaer(
-        tempMax: 18, tempMin: 15, rainyPercent: 0, time: DateTime(2021, 10, 2)),
-    Weathaer(
-        tempMax: 20, tempMin: 19, rainyPercent: 0, time: DateTime(2021, 10, 3)),
-    Weathaer(
-        tempMax: 20, tempMin: 16, rainyPercent: 0, time: DateTime(2021, 10, 1)),
-    Weathaer(
-        tempMax: 18, tempMin: 15, rainyPercent: 0, time: DateTime(2021, 10, 2)),
-    Weathaer(
-        tempMax: 20, tempMin: 19, rainyPercent: 0, time: DateTime(2021, 10, 3)),
-    Weathaer(
-        tempMax: 20, tempMin: 16, rainyPercent: 0, time: DateTime(2021, 10, 1)),
-    Weathaer(
-        tempMax: 18, tempMin: 15, rainyPercent: 0, time: DateTime(2021, 10, 2)),
-    Weathaer(
-        tempMax: 20, tempMin: 19, rainyPercent: 0, time: DateTime(2021, 10, 3)),
-    Weathaer(
-        tempMax: 20, tempMin: 16, rainyPercent: 0, time: DateTime(2021, 10, 1)),
-    Weathaer(
-        tempMax: 18, tempMin: 15, rainyPercent: 0, time: DateTime(2021, 10, 2)),
-    Weathaer(
-        tempMax: 20, tempMin: 19, rainyPercent: 0, time: DateTime(2021, 10, 3)),
-  ];
+  List<Weathaer>? hourlyWeather;
+  //List<Weathaer>とする事で、Weathaerクラスで定義した変数を使うことができる。
+
+  List<Weathaer>? dailyWeather;
   List<String> weekDay = ['月', '火', '水', '木', '金', '土', '日'];
   @override
   Widget build(BuildContext context) {
@@ -135,10 +37,18 @@ class _TopPageState extends State<TopPage> {
               errorMessage = response?['message'];
               if (response!.containsKey('address')) {
                 address = response['address'] ?? '';
+                currentWeather = await Weathaer.getCurrentWeather(value);
+                Map<String, List<Weathaer>>? weatherForecast =
+                    await Weathaer.getForecast(
+                        lon: currentWeather!.lon, lat: currentWeather!.lat);
+                hourlyWeather = weatherForecast?['hourly'];
+                dailyWeather = weatherForecast?['daily'];
               }
 
               ///searchAddressFromZipCodeでasync/awaitを使っているからこっちでもasync/awaitを使ってあげる
               print(address);
+              print(hourlyWeather);
+
               setState(() {});
             },
             keyboardType: TextInputType.number,
@@ -156,9 +66,11 @@ class _TopPageState extends State<TopPage> {
           address,
           style: const TextStyle(fontSize: 25),
         ),
-        Text(currentWeather.description ?? ''),
+        Text(currentWeather == null ? '-' : currentWeather!.description ?? ''),
         Text(
-          '${currentWeather.temp}°',
+          currentWeather == null
+              ? '-'
+              : '${currentWeather!.temp!.toStringAsFixed(0)}°',
           style: const TextStyle(fontSize: 80),
         ),
         Row(
@@ -166,9 +78,13 @@ class _TopPageState extends State<TopPage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: Text('最高:${currentWeather.tempMax}°'),
+              child: Text(currentWeather == null
+                  ? '最高:-'
+                  : '最高:${currentWeather!.tempMax!.toStringAsFixed(0)}°'),
             ),
-            Text('最低:${currentWeather.tempMin}°'),
+            Text(currentWeather == null
+                ? '最低:-'
+                : '最低:${currentWeather!.tempMin!.toStringAsFixed(0)}°'),
           ],
         ),
         const SizedBox(
@@ -182,87 +98,97 @@ class _TopPageState extends State<TopPage> {
           scrollDirection: Axis
               .horizontal, //SingleChildScrollViewは縦方向のスクロールがデフォルトだからこれで横方向に適応させる。
 
-          child: Row(
-            children: hourlyWeather.map((weatherPre) {
-              ///mapの書き方　チャプター5　8:00　weatherPreの所はなんでもいい
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-                child: Column(
-                  children: [
-                    Text(
-                        '${DateFormat('H').format(weatherPre.time!)}時'), //hourlyWeather[0].0を書く事でリストの一番最初のモノを取得出来る
-                    Text(
-                      '${weatherPre.rainyPercent}%',
-                      style: const TextStyle(color: Colors.lightBlueAccent),
-                    ),
-                    const Icon(Icons.wb_sunny_sharp),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        '${weatherPre.temp}',
-                        style: const TextStyle(fontSize: 18),
+          child: hourlyWeather == null
+              ? Container()
+              : Row(
+                  children: hourlyWeather!.map((weatherPre) {
+                    ///mapの書き方　チャプター5　8:00　weatherPreの所はなんでもいい
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                              '${DateFormat('H').format(weatherPre.time!)}時'), //hourlyWeather[0].0を書く事でリストの一番最初のモノを取得出来る
+
+                          Image.network(
+                              'http://openweathermap.org/img/wn/${weatherPre.icon}.png'),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              '${weatherPre.temp!.toStringAsFixed(0)}°',
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                          )
+                        ],
                       ),
-                    )
-                  ],
+                    );
+                  }).toList(),
                 ),
-              );
-            }).toList(),
-          ),
         ),
         const Divider(
           height: 0,
         ),
-        Expanded(
-          //適応範囲を限定できる（SingleChildScrollViewを使うときにエラーが出たら使うぐらいで覚えとけばいい、とりあえず）
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Column(
-                children: dailyWeather.map((we) {
-                  return Container(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                            width: 50,
-                            child: Text('${weekDay[we.time!.weekday - 1]}曜日')),
-                        Row(
-                          children: [
-                            const Icon(Icons.wb_sunny_sharp),
-                            Text(
-                              '${we.rainyPercent}%',
-                              style: const TextStyle(
-                                  color: Colors.lightBlueAccent),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: 50,
+        dailyWeather == null
+            ? Container()
+            : Expanded(
+                //適応範囲を限定できる（SingleChildScrollViewを使うときにエラーが出たら使うぐらいで覚えとけばいい、とりあえず）
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      children: dailyWeather!.map((we) {
+                        return Container(
+                          height: 50,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                '${we.tempMax}',
-                                style: const TextStyle(fontSize: 16),
+                              Container(
+                                  width: 90,
+                                  child: Text(
+                                      '${weekDay[we.time!.weekday - 1]}曜日')),
+                              Row(
+                                children: [
+                                  Image.network(
+                                      'http://openweathermap.org/img/wn/${we.icon}.png'),
+                                  Container(
+                                    width: 50,
+                                    child: Text(
+                                      '${we.rainyPercent}%',
+                                      style: const TextStyle(
+                                          color: Colors.lightBlueAccent),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Text(
-                                '${we.tempMin}',
-                                style: const TextStyle(
-                                    fontSize: 16, color: Colors.grey),
+                              Container(
+                                width: 90,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '↑${we.tempMax!.toStringAsFixed(0)}°',
+                                      style: const TextStyle(
+                                          fontSize: 16, color: Colors.red),
+                                    ),
+                                    Text(
+                                      '↓${we.tempMin!.toStringAsFixed(0)}°',
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.blueAccent),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        );
+                      }).toList(),
                     ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-        )
+                  ),
+                ),
+              )
       ],
     )));
   }
