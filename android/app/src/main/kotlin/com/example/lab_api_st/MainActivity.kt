@@ -1,4 +1,4 @@
-package com.example.lab_api_st
+package com.weather.lab_api_st
 
 import io.flutter.embedding.android.FlutterActivity
 

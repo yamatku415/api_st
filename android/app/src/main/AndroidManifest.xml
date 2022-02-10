@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.lab_api_st">
+    package="com.weather.lab_api_st">
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="lab_api_st"
+        android:label="WeatherCheck"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

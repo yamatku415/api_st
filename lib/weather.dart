@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 class Weathaer {
-  double? temp; //気温
-  double? tempMax; //最高気温
-  double? tempMin; //最低気温
+  num? temp; //気温
+  num? tempMax; //最高気温
+  num? tempMin; //最低気温
   String? description; //天気状態
-  double? lon; //経度
-  double? lat; //緯度
+  num? lon; //経度
+  num? lat; //緯度
   String? icon; //天気情報のアイコン
   DateTime? time; //日時
-  double? rainyPercent; //降水確率
+  num? rainyPercent; //降水確率
 
   Weathaer(
       {this.temp,
@@ -60,7 +60,7 @@ class Weathaer {
   }
 
   static Future<Map<String, List<Weathaer>>?> getForecast(
-      {double? lon, double? lat}) async {
+      {num? lon, num? lat}) async {
     Map<String, List<Weathaer>>? response = {};
 
     String url =
