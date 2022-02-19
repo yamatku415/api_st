@@ -158,7 +158,7 @@ class _TopPageState extends State<TopPage> {
                                     Container(
                                       width: 50,
                                       child: Text(
-                                        '${we.rainyPercent}%',
+                                        '${we.rainyPercent!.toStringAsFixed(0)}%',
                                         style: const TextStyle(
                                             color: Colors.blueAccent),
                                       ),
